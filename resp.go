@@ -104,6 +104,19 @@ func (r *Resp) WriteUnauthorized(realm string) {
 	fmt.Fprint(r.w, http.StatusText(http.StatusUnauthorized))
 }
 
+func WriteBadRequest(w http.ResponseWriter, message string) {
+	New(w).WriteBadRequest(message)
+}
+
+func (r *Resp) WriteBadRequest(message string) {
+	if r.cors {
+		r.Header().Set("Access-Control-Allow-Origin", "*")
+		r.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+	}
+	r.w.WriteHeader(http.StatusBadRequest)
+	fmt.Fprint(r.w, message)
+}
+
 func WriteFile(w http.ResponseWriter, statusCode int, path string) {
 	New(w).WriteFile(statusCode, path)
 }
